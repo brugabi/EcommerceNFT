@@ -1,12 +1,18 @@
 import modules.database as database
+from flask import Flask,url_for,render_template
 
-dado = {'nome':'Bruninha',
-        'profissao':'teste'}
+app = Flask(__name__)
 
-database.inserir(item=dado)
+@app.route("/")
+def home():
+    return render_template("index.html")
+    
+@app.route("/etapa1")
+def etapa1():
+    return render_template('etapa1.html')
 
-#print(database.ler_registro(16))
-#database.remover_registro(16)
-print(database.ler_registro(17))
-database.alterar_registro(17,'profissao','cafetao')
-print(database.ler_registro(17))
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+
