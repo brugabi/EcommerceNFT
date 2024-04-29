@@ -1,89 +1,12 @@
 {
- "atualizacao": "28/04/2024, 16:27:59",
+ "atualizacao": "29/04/2024, 12:16:53",
  "dados": {
   "1": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "2": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "3": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "4": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "5": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "6": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "7": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "8": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "9": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "10": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "11": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "12": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "13": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "14": {
-   "nome": "Bruninha",
-   "profissao": "ahhhhhhhh"
-  },
-  "15": {
-   "nome": "Bruninha",
-   "profissao": "surfistinha"
-  },
-  "17": {
-   "nome": "rafael",
-   "profissao": "cafetao"
-  },
-  "18": {
-   "nome": "Bruninha",
-   "profissao": "teste"
-  },
-  "19": {
-   "nome": "Bruninha",
-   "profissao": "teste"
-  },
-  "20": {
-   "nome": "Bruninha",
-   "profissao": "teste"
-  },
-  "21": {
-   "nome": "Bruninha",
-   "profissao": "teste"
-  },
-  "22": {
-   "nome": "Bruninha",
-   "profissao": "teste"
+   "nome": "primeiro nft",
+   "valor": 14000.56,
+   "blockchain": "djkvksdjnvskdjvdn",
+   "status": true,
+   "image": "static/img/teste.svg"
   }
  }
 }
