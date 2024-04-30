@@ -12,6 +12,14 @@ def home():
     catalogo = database.lista_de_produtos()
     return render_template("index.html",titulo=titulo,catalogo=catalogo)
 
+@app.route('/catalogue')
+def catalogue():
+    return render_template('catalogue.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/return-file')
 def return_file():
     pathzip = './arquivos/data_exported.zip'
