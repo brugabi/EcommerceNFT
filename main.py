@@ -1,4 +1,5 @@
 import modules.database as database
+import zipfile
 
 from flask import Flask,url_for,render_template,send_file
 
@@ -13,7 +14,11 @@ def home():
 
 @app.route('/return-file')
 def return_file():
-    return send_file('./arquivos/data_exported.zip', as_attachment=True)
+    pathzip = './arquivos/data_exported.zip'
+    with zipfile.ZipFile(pathzip, 'w') as zipf:
+        zipf.write('database.json')
+
+    return send_file(pathzip, as_attachment=True)
 
 if __name__ == "__main__":
     app.run(debug=True)
