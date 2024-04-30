@@ -1,12 +1,26 @@
 {
- "atualizacao": "29/04/2024, 12:16:53",
+ "atualizacao": "29/04/2024, 19:27:35",
  "dados": {
   "1": {
-   "nome": "primeiro nft",
-   "valor": 14000.56,
-   "blockchain": "djkvksdjnvskdjvdn",
+   "nome": "Macaco Tranquilo",
+   "valor": 14000,
+   "blockchain": "ik58963bd",
    "status": true,
-   "image": "static/img/teste.svg"
+   "image": "./static/img/macacotranquilo.svg"
+  },
+  "2": {
+   "nome": "Macaco Louco",
+   "valor": 500000,
+   "blockchain": "lm78903fm",
+   "status": true,
+   "image": "./static/img/macacorei.jpg"
+  },
+  "3": {
+   "nome": "Macaco Laser",
+   "valor": 5000,
+   "blockchain": "as64256",
+   "status": true,
+   "image": "./static/img/macacolaser.jpg"
   }
  }
 }

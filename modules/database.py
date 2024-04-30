@@ -133,6 +133,8 @@ def exportar_base_de_dados():
         log(f"Erro ao criar o arquivo zip: {e}")
         raise e
     
+    return zip_file
+    
 def lista_de_produtos():
     '''
     '''
@@ -143,3 +145,4 @@ def lista_de_produtos():
         catalogo.append(dict_dados[dado])
 
     return catalogo
+
