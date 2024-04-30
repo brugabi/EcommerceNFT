@@ -1,26 +1,61 @@
 {
- "atualizacao": "29/04/2024, 19:27:35",
+ "atualizacao": "30/04/2024, 01:19:26",
  "dados": {
   "1": {
-   "nome": "Macaco Normal",
-   "valor": 14000,
+   "nome": "Normal Ape",
+   "valor": 10000,
    "blockchain": "ik58963bd",
    "status": true,
-   "image": "./static/img/macacotranquilo.svg"
+   "image": "./static/img/normalape.svg"
   },
   "2": {
-   "nome": "Macaco Louco",
+   "nome": "King Ape",
    "valor": 500000,
    "blockchain": "lm78903fm",
    "status": true,
-   "image": "./static/img/macacorei.jpg"
+   "image": "./static/img/kingape.jpg"
   },
   "3": {
-   "nome": "Macaco Laser",
-   "valor": 5000,
+   "nome": "Laser Ape",
+   "valor": 20000,
    "blockchain": "as64256",
    "status": true,
-   "image": "./static/img/macacolaser.jpg"
+   "image": "./static/img/laserape.jpg"
+  },
+  "4": {
+   "nome": "Communist Ape",
+   "valor": 999999999999999999999,
+   "blockchain": "cm1917urss1991",
+   "status": true,
+   "image": "./static/img/communistape.jpg"
+  },
+  "5": {
+   "nome": "Angel Ape",
+   "valor": 25000,
+   "blockchain": "je666sus49201",
+   "status": true,
+   "image": "./static/img/angelape.jpg"
+  },
+  "6": {
+   "nome": "Birthday Ape",
+   "valor": 30000,
+   "blockchain": "tuy534mb09zs",
+   "status": true,
+   "image": "./static/img/bpdape.jpg"
+  },
+  "7": {
+   "nome": "Child Ape",
+   "valor": 30000,
+   "blockchain": "aly948ss13o4n",
+   "status": true,
+   "image": "./static/img/childape.png"
+  },
+  "8": {
+   "nome": "Sad Ape",
+   "valor": 70000,
+   "blockchain": "bi892bi12er2",
+   "status": true,
+   "image": "./static/img/sadape.jpg"
   }
  }
 }
