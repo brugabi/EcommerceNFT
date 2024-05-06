@@ -4273,6 +4273,7 @@ textarea.form-control-lg {
 .card-img,
 .card-img-top,
 .card-img-bottom {
+  height: 450;
   width: 100%;
 }
 
