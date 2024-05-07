@@ -20,6 +20,10 @@ def catalogue():
 def about():
     return render_template('about.html')
 
+@app.route('/adm')
+def adm ():
+    return render_template('adm.html')
+
 @app.route('/return-file')
 def return_file():
     pathzip = './arquivos/data_exported.zip'
