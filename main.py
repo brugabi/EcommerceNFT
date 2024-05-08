@@ -1,7 +1,6 @@
-import modules.database as database
 import zipfile
-
-from flask import Flask,url_for,render_template,send_file
+import modules.database as database
+from flask import Flask,url_for,render_template,send_file,request
 
 app = Flask(__name__)
 
@@ -31,6 +30,51 @@ def return_file():
         zipf.write('database.json')
 
     return send_file(pathzip, as_attachment=True)
+
+@app.route('/insert',methods=['POST'])
+def insert():
+    try:
+        nome = request.form['nome']
+        valor = request.form['valor']
+        blockchain = request.form['blockchain']
+        status = request.form['status']
+        image_path = None
+        database.inserir_registro(nome=nome,valor=valor,blockchain=blockchain,status=status,image_path=image_path)
+
+        return {"success":True,
+                "message":"Usuario inserido com sucesso"}
+    
+    except Exception as e:
+        return {"success":False,
+                "message":f"{e}"}
+    
+@app.route('/delete',methods=['POST'])
+def delete():
+    try:
+        id = request.form['id']
+        database.remover_registro(id=id)
+
+        return {"success":True,
+                "message":f"O usuario {id} foi deletado com sucesso!"}
+    
+    except Exception as e:
+        return {"success":False,
+                "message":f"{e}"}
+
+@app.route('/alterar',methods=['POST'])
+def alterar():
+    try:
+        id = request.form['id']
+        key = request.form['key']
+        valor = request.form['valor']
+        database.alterar_registro(id=id,key=key,valor=valor)
+        return {"success":True,
+                "message":f"O usuario {id} foi alterado com sucesso!"}
+    
+    except Exception as e:
+        return {"success":False,
+                "message":f"{e}"}
+
 
 if __name__ == "__main__":
     app.run(debug=True)

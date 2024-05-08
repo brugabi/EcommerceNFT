@@ -1,5 +1,5 @@
 {
- "atualizacao": "30/04/2024, 01:19:26",
+ "atualizacao": "08/05/2024, 11:46:54",
  "dados": {
   "1": {
    "nome": "Normal Ape",
@@ -9,18 +9,11 @@
    "image": "./static/img/normalape.svg"
   },
   "2": {
-   "nome": "King Ape",
+   "nome": "Teste Alterar",
    "valor": 500000,
    "blockchain": "lm78903fm",
    "status": true,
    "image": "./static/img/kingape.jpg"
-  },
-  "3": {
-   "nome": "Laser Ape",
-   "valor": 20000,
-   "blockchain": "as64256",
-   "status": true,
-   "image": "./static/img/laserape.jpg"
   },
   "4": {
    "nome": "Communist Ape",
@@ -49,13 +42,6 @@
    "blockchain": "aly948ss13o4n",
    "status": true,
    "image": "./static/img/childape.png"
-  },
-  "8": {
-   "nome": "Sad Ape",
-   "valor": 70000,
-   "blockchain": "bi892bi12er2",
-   "status": true,
-   "image": "./static/img/sadape.jpg"
   }
  }
 }

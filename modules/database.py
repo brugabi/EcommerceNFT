@@ -23,7 +23,7 @@ def ler_banco_de_dados() -> dict:
         data_dict = json.load(database_file)
     return data_dict
 
-def inserir(nome:str,valor:float,blockchain:str,status:bool,image_path:str):
+def inserir_registro(nome:str,valor:float,blockchain:str,status:bool,image_path:str):
     '''
     '''
     
@@ -52,12 +52,13 @@ def inserir(nome:str,valor:float,blockchain:str,status:bool,image_path:str):
         }
         data_dict['dados'][id] = item
         data_dict['atualizacao'] = agora()
+
+        # Salvando a base de dados
+        salvar_dados(data_dict)
+
         log("Item inserido com sucesso!")
     except Exception as e:
         raise Exception(f"Erro ao inserir o item na base de dados: {e}")
-    
-    # Salvando a base de dados
-    salvar_dados(data_dict)
 
 def salvar_dados(data_dict):
     try:
@@ -78,17 +79,30 @@ def remover_registro(id: int):
     '''
     teste
     '''
-    data_dict = ler_banco_de_dados()
-    del data_dict['dados'][str(id)]
-    salvar_dados(data_dict)
+    try:
+        data_dict = ler_banco_de_dados()
+        if data_dict['dados'].pop(str(id),None) is None:
+            raise Exception("O id informado nao existe na nossa base de dados!")  
+        salvar_dados(data_dict)
+    except Exception as e:
+            raise e
 
 def alterar_registro(id: int, key: str, valor:any):
     '''
     alterar'''
-
-    data_dict = ler_banco_de_dados()
-    data_dict['dados'][str(id)][key] = valor
-    salvar_dados(data_dict)
+    try:
+        data_dict = ler_banco_de_dados()
+        
+        if id not in list(data_dict['dados'].keys()): # Verificando se é uma id Válida
+            raise Exception("O id não encontrado.")
+        
+        if key not in list(data_dict['dados'][str(id)].keys()):
+            raise Exception(f"A key {key} nao e uma key valida.")
+        
+        data_dict['dados'][str(id)][key] = valor
+        salvar_dados(data_dict)
+    except Exception as e:
+        raise e
 
 def exportar_base_de_dados():
     """
