@@ -2800,6 +2800,11 @@ textarea.form-control-lg {
   background-color: var(--bs-btn-bg);
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+#btngap {
+  display: flex;
+  gap: 10px;
+}
 @media (prefers-reduced-motion: reduce) {
   .btn {
     transition: none;
