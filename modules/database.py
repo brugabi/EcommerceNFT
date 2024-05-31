@@ -148,15 +148,4 @@ def exportar_base_de_dados():
         raise e
     
     return zip_file
-    
-def lista_de_produtos():
-    '''
-    '''
-    catalogo = []
-    banco_de_dados = ler_banco_de_dados()
-    dict_dados = banco_de_dados.get('dados')
-    for dado in dict_dados:
-        catalogo.append(dict_dados[dado])
-
-    return catalogo
 

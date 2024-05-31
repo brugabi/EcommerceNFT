@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}CRUD NFTs{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Gerenciar NFTs</h1>
+
+    <!-- Formulário de Inserção -->
+    <div id="insertFormContainer" style="display: none;">
+        <form id="insertForm" class="mb-4">
+            <!-- Campos do formulário de inserção -->
+        </form>
+    </div>
+
+    <!-- Formulário de Alteração -->
+    <div id="alterFormContainer" style="display: none;">
+        <form id="alterForm" class="mb-4">
+            <!-- Campos do formulário de alteração -->
+        </form>
+    </div>
+
+    <!-- Botões para inserir e alterar registros -->
+    <button type="button" class="btn btn-primary" onclick="showInsertForm()">Inserir Registro</button>
+    <button type="button" class="btn btn-success ms-2" onclick="showAlterForm()">Alterar Registro</button>
+
+    <!-- Tabela de Registros -->
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Blockchain</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="nftTableBody">
+            <!-- Linhas da tabela preenchidas dinamicamente -->
+        </tbody>
+    </table>
+
+    <!-- Modal de Inserção -->
+    <div class="modal" id="insertModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Inserir Registro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="insertForm">
+                        <div class="mb-3">
+                            <label for="insertNome" class="form-label">Nome</label>
+                            <input type="text" class="form-control" id="insertNome" name="nome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="insertValor" class="form-label">Valor</label>
+                            <input type="number" class="form-control" id="insertValor" name="valor" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="insertBlockchain" class="form-label">Blockchain</label>
+                            <input type="text" class="form-control" id="insertBlockchain" name="blockchain" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="insertStatus" class="form-label">Status</label>
+                            <select class="form-select" id="insertStatus" name="status" required>
+                                <option value="Disponível">Disponível</option>
+                                <option value="Indisponível">Indisponível</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" onclick="insertNFT()">Inserir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    loadNFTs();
+
+    document.getElementById('insertForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        // Converter o valor do status para booleano
+        const status = formData.get('status') === 'Disponível';
+        formData.set('status', status);
+        fetch('/insert', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert(data.message);
+                  loadNFTs();
+              } else {
+                  alert(data.message);
+              }
+          });
+    });
+
+    // Função para exibir o formulário de inserção
+    function showInsertForm() {
+        document.getElementById('insertFormContainer').style.display = 'block';
+        document.getElementById('alterFormContainer').style.display = 'none';
+    }
+
+    document.getElementById('alterForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        // Converter o valor do status para booleano
+        const status = formData.get('status') === 'Disponível';
+        formData.set('status', status);
+        fetch('/alterar', {
+            method: 'POST',
+            body: formData
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert(data.message);
+                  loadNFTs();
+              } else {
+                  alert(data.message);
+              }
+          });
+    });
+
+    // Função para exibir o formulário de alteração
+    function showAlterForm() {
+        document.getElementById('alterFormContainer').style.display = 'block';
+        document.getElementById('insertFormContainer').style.display = 'none';
+    }
+});
+
+function loadNFTs() {
+    fetch('/get-nfts')
+        .then(response => response.json())
+        .then(data => {
+            const nftTableBody = document.getElementById('nftTableBody');
+            nftTableBody.innerHTML = '';
+            data.forEach(nft => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${nft.id}</td>
+                    <td>${nft.nome}</td>
+                    <td>${Number(nft.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                    <td>${nft.blockchain}</td>
+                    <td>${nft.status ? 'Disponível' : 'Indisponível'}</td>
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteNFT(${nft.id})">Deletar</button>
+                    </td>
+                `;
+                nftTableBody.appendChild(row);
+            });
+        });
+}
+
+function editNFT(id) {
+    const newValue = prompt('Digite o novo valor:');
+    if (newValue) {
+        const key = prompt('Digite o campo a ser alterado (nome, valor, blockchain, status):');
+        if (key) {
+            const data = { id, key, valor: key === 'status' ? (newValue === 'Disponível') : newValue };
+            fetch('/alterar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+            .then(data => {
+                  if (data.success) {
+                      alert(data.message);
+                      loadNFTs();
+                  } else {
+                      alert(data.message);
+                  }
+              });
+        }
+    }
+}
+
+function deleteNFT(id) {
+    if (confirm('Tem certeza que deseja deletar este NFT?')) {
+        fetch('/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id })
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  alert(data.message);
+                  loadNFTs();
+              } else {
+                  alert(data.message);
+              }
+          });
+    }
+}
+
+// Função para exibir o modal de inserção
+function showInsertForm() {
+    var modal = document.getElementById('insertModal');
+    modal.style.display = 'block';
+}
+
+// Fechar o modal quando o usuário clicar fora dele
+window.onclick = function(event) {
+    var modal = document.getElementById('insertModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+{% endblock %}

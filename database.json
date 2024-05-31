@@ -1,5 +1,5 @@
 {
- "atualizacao": "08/05/2024, 11:46:54",
+ "atualizacao": "31/05/2024, 11:50:02",
  "dados": {
   "1": {
    "nome": "Normal Ape",
@@ -8,26 +8,12 @@
    "status": true,
    "image": "./static/img/normalape.svg"
   },
-  "2": {
-   "nome": "Teste Alterar",
-   "valor": 500000,
-   "blockchain": "lm78903fm",
-   "status": true,
-   "image": "./static/img/kingape.jpg"
-  },
   "4": {
    "nome": "Communist Ape",
-   "valor": 999999999999999999999,
+   "valor": 5000.0,
    "blockchain": "cm1917urss1991",
    "status": true,
    "image": "./static/img/communistape.jpg"
-  },
-  "5": {
-   "nome": "Angel Ape",
-   "valor": 25000,
-   "blockchain": "je666sus49201",
-   "status": true,
-   "image": "./static/img/angelape.jpg"
   },
   "6": {
    "nome": "Birthday Ape",
@@ -42,6 +28,13 @@
    "blockchain": "aly948ss13o4n",
    "status": true,
    "image": "./static/img/childape.png"
+  },
+  "8": {
+   "nome": "Teste Inserir",
+   "valor": "351351",
+   "blockchain": "erk\u00e7vne\u00e7kjvner\u00e7ikv",
+   "status": "false",
+   "image": null
   }
  }
 }
