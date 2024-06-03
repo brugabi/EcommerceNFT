@@ -1,11 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Catalogue NFT{% endblock %}
+
+{% block content %}
+
+<div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+        <h1 class="display-4 fw-bolder">Catalogo</h1>
+    </div>
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Digite sua busca...">
+        <button class="btn btn-outline-dark" onclick="search()"><i class="bi-cart-fill me-1"></i>Buscar</button>
+    </div>
+</div>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Blockchain</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="nftTableBody">
+            <!-- Linhas da tabela preenchidas dinamicamente -->
+        </tbody>
+    </table>
+
+    <script>
+        function loadNFTs() {
+            fetch('/get-nfts')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na resposta da rede');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const nftTableBody = document.getElementById('nftTableBody');
+                    nftTableBody.innerHTML = '';
+                    data.forEach(nft => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${nft.id}</td>
+                            <td>${nft.nome}</td>
+                            <td>${Number(nft.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
+                            <td>${nft.blockchain}</td>
+                            <td>${nft.status ? 'Disponível' : 'Indisponível'}</td>
+                        `;
+                        nftTableBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Erro ao carregar NFTs:', error));
+        }
+
+        function search() {
+            const query = document.getElementById('searchInput').value;
+            alert('Você buscou por: ' + query);
+            // Aqui você pode adicionar a lógica para tratar a busca,
+            // como redirecionar para uma página de resultados ou filtrar dados.
+        }
+
+        // Chama a função para carregar os NFTs quando a página é carregada
+        document.addEventListener('DOMContentLoaded', loadNFTs);
+    </script>
     
-</body>
-</html>
+{% endblock %}

@@ -10829,4 +10829,31 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
+
+  .search-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.search-input { 
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+}
+
+.search-button {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px;
+    border-left: none;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
 }
