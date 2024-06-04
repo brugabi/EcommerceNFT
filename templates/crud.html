@@ -50,7 +50,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="insertForm">
+                    <form id="insertForm" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="insertNome" class="form-label">Nome</label>
                             <input type="text" class="form-control" id="insertNome" name="nome" required>
@@ -70,7 +70,11 @@
                                 <option value="Indisponível">Indisponível</option>
                             </select>
                         </div>
-                    </form>
+                        <div class="mb-3">
+                            <label for="insertImagem" class="form-label">Imagem</label>
+                            <input type="file" class="form-control" id="insertImagem" name="imagem" accept="image/*" required>
+                        </div>
+                    </form>                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -82,6 +86,34 @@
 </div>
 
 <script>
+    function insertNFT() {
+        // Obtém o formulário
+        var form = document.getElementById('insertForm');
+        
+        // Cria um objeto FormData para enviar os dados do formulário
+        var formData = new FormData(form);
+        
+        // Cria uma requisição AJAX para enviar os dados do formulário
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/insert'); // Substitua '/inserir_nft' pela rota correta no seu servidor
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // O envio foi bem-sucedido, faça algo, se necessário
+                console.log('Inserção bem-sucedida!');
+            } else {
+                // Ocorreu um erro durante o envio, exiba uma mensagem de erro
+                console.error('Erro ao inserir:', xhr.statusText);
+            }
+        };
+        xhr.onerror = function() {
+            // Ocorreu um erro durante a requisição AJAX
+            console.error('Erro ao enviar a requisição.');
+        };
+        
+        // Envia os dados do formulário
+        xhr.send(formData);
+    }
+
 document.addEventListener('DOMContentLoaded', function () {
     loadNFTs();
 

@@ -15,6 +15,30 @@
 <!-- Section-->
 <section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
+        <!-- Filter Form -->
+        <form method="GET" action="/">
+            <div class="row mb-4">
+                <div class="col">
+                    <input type="text" name="substring" class="form-control" placeholder="Nome">
+                </div>
+                <div class="col">
+                    <input type="number" name="min_value" class="form-control" placeholder="Preço Mínimo">
+                </div>
+                <div class="col">
+                    <input type="number" name="max_value" class="form-control" placeholder="Preço Máximo">
+                </div>
+                <div class="col">
+                    <input type="number" name="min_key" class="form-control" placeholder="Id Mínimo">
+                </div>
+                <div class="col">
+                    <input type="number" name="max_key" class="form-control" placeholder="Id Máximo">
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+            </div>
+        </form>
+        <!-- Products Section -->
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for produto_id, produto in catalogo.items() %}
             <div class="col mb-5">

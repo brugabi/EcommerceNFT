@@ -2,6 +2,7 @@ import os
 import json
 from zipfile import ZipFile
 from modules.utils import agora,log
+from modules.BTree import BTree
 
 def create_database():
     '''
@@ -149,3 +150,35 @@ def exportar_base_de_dados():
     
     return zip_file
 
+def ler_banco_de_dados_arvore_b(**kwargs):
+    dados = ler_banco_de_dados()['dados']
+
+    b_tree = BTree(3)
+
+    # Inserir dados na árvore B
+    for key, value in dados.items():
+        # Convertendo 'valor' e 'status' para o tipo apropriado
+        value['valor'] = float(value['valor'])
+        value['status'] = value['status'] == "true"
+        b_tree.insert((int(key), value))
+
+    # Filtrar registros com base nos kwargs
+    min_key = kwargs.get('min_key')
+    max_key = kwargs.get('max_key')
+    min_value = kwargs.get('min_value')
+    max_value = kwargs.get('max_value')
+    substring = kwargs.get('substring')
+
+    # Primeira filtragem por faixa de chaves
+    filtered_records = b_tree.filter_by_key_range(min_key, max_key)
+
+    # Filtragem adicional por valor e substring
+    if min_value is not None or max_value is not None or substring is not None:
+        filtered_records = {
+            key: value for key, value in filtered_records.items()
+            if (min_value is None or value['valor'] >= min_value) and
+               (max_value is None or value['valor'] <= max_value) and
+               (substring is None or substring.lower() in value['nome'].lower())
+        }
+
+    return filtered_records

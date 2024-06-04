@@ -1,3 +1,5 @@
+import json
+
 class BTreeNode:
     def __init__(self, t, leaf=False):
         self.t = t  # Grau mínimo
@@ -14,13 +16,14 @@ class BTree:
         return self._traverse(self.root)
     
     def _traverse(self, node):
-        records = []
+        records = {}
         for i in range(len(node.keys)):
             if not node.leaf:
-                records.extend(self._traverse(node.children[i]))
-            records.append(node.keys[i])
+                records.update(self._traverse(node.children[i]))
+            key, value = node.keys[i]
+            records[key] = value
         if not node.leaf:
-            records.extend(self._traverse(node.children[len(node.keys)]))
+            records.update(self._traverse(node.children[len(node.keys)]))
         return records
     
     def search(self, k):
@@ -79,16 +82,28 @@ class BTree:
     
     def filter_records(self, min_value=None, max_value=None, substring=None):
         all_records = self.traverse()
-        filtered_records = []
+        filtered_records = {}
 
-        for record in all_records:
-            key, value = record
+        for key, value in all_records.items():
             if min_value is not None and value['valor'] < min_value:
                 continue
             if max_value is not None and value['valor'] > max_value:
                 continue
             if substring is not None and substring.lower() not in value['nome'].lower():
                 continue
-            filtered_records.append(record)
+            filtered_records[key] = value
+
+        return filtered_records
+
+    def filter_by_key_range(self, min_key=None, max_key=None):
+        all_records = self.traverse()
+        filtered_records = {}
+
+        for key, value in all_records.items():
+            if min_key is not None and key < min_key:
+                continue
+            if max_key is not None and key > max_key:
+                continue
+            filtered_records[key] = value
 
         return filtered_records

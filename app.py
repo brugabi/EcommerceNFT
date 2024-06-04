@@ -1,11 +1,24 @@
-from flask import Flask, render_template, request, jsonify
-from modules import database  # Supondo que você tem um módulo de banco de dados
+import io
+import json
+import zipfile
+from modules import database 
+from modules.utils import compress_lzw, decompress_lzw
+from flask import Flask, render_template, request, jsonify, send_file, redirect
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index.html',catalogo=database.ler_banco_de_dados()['dados'])
+    # Obter parâmetros de filtro
+    min_key = request.args.get('min_key', type=int)
+    max_key = request.args.get('max_key', type=int)
+    min_value = request.args.get('min_value', type=float)
+    max_value = request.args.get('max_value', type=float)
+    substring = request.args.get('substring', type=str)
+
+    # Ler e filtrar banco de dados
+    b_tree = database.ler_banco_de_dados_arvore_b(min_key=min_key,max_key=max_key,min_value=min_value, max_value=max_value, substring=substring)
+    return render_template('index.html', catalogo=b_tree)
 
 @app.route('/about')
 def about():
@@ -15,17 +28,27 @@ def about():
 def catalogue():
     return render_template('catalogue.html')
 
-@app.route('/return-file')
-def return_file():
-    # Lógica para retorno de arquivo
-    return "Arquivo"
+@app.route('/download-database')
+def download():
+    data = database.ler_banco_de_dados()['dados']
+    json_data = json.dumps(data)
+    byte_data = json_data.encode()
+
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        zip_file.writestr('database.json', byte_data)
+
+    zip_buffer.seek(0)
+
+    return send_file(
+        zip_buffer,
+        as_attachment=True,
+        download_name='database.zip',
+        mimetype='application/zip'
+    )
 
 @app.route('/adm')
 def adm():
-    return render_template('crud.html')
-
-@app.route('/crud')
-def crud():
     return render_template('crud.html')
 
 @app.route('/get-nfts', methods=['GET'])
@@ -72,6 +95,7 @@ def alterar():
         return {"success": True, "message": f"O NFT {id} foi alterado com sucesso!"}
     except Exception as e:
         return {"success": False, "message": str(e)}
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
