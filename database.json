@@ -1,5 +1,5 @@
 {
- "atualizacao": "31/05/2024, 11:50:02",
+ "atualizacao": "05/06/2024, 10:33:23",
  "dados": {
   "1": {
    "nome": "Normal Ape",
@@ -35,6 +35,27 @@
    "blockchain": "erk\u00e7vne\u00e7kjvner\u00e7ikv",
    "status": "false",
    "image": null
+  },
+  "9": {
+   "nome": "Dev Boy",
+   "valor": 6900,
+   "blockchain": "4L34nDr0",
+   "status": true,
+   "image": "./static/img/devboy.jpeg"
+  },
+  "10": {
+   "nome": "Sexy Boy",
+   "valor": 696969,
+   "blockchain": "4l46g2B0yL0v3R",
+   "status": true,
+   "image": "./static/img/sexyboy.jpeg"
+  },
+  "11": {
+   "nome": "Homeless Boy",
+   "valor": 100000000,
+   "blockchain": "k893ma134Rg0l04w",
+   "status": true,
+   "image": "./static/img/homlessboy.jpeg"
   }
  }
 }
