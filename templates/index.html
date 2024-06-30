@@ -53,7 +53,7 @@
                             <!-- Product price-->
                             ${{ produto.valor }}<br>
                             <!-- Product status-->
-                            {{ 'Disponível' if produto.status else 'Indisponível' }}<br>
+                            {{ produto.status }}<br>
                             <!-- Product blockchain-->
                             {{ produto.blockchain }}
                         </div>
@@ -75,7 +75,7 @@ function insertInShopCart(id) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ id: id }) // Certifique-se de enviar um objeto JSON com a chave 'id'
+        body: JSON.stringify({ id: id })
     }).then(response => response.json())
       .then(data => {
           if (data.success) {

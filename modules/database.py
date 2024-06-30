@@ -3,6 +3,7 @@ import json
 from zipfile import ZipFile
 from modules.utils import agora,log
 from modules.BTree import BTree
+from typing import Literal
 
 def create_database():
     '''
@@ -24,7 +25,7 @@ def ler_banco_de_dados() -> dict:
         data_dict = json.load(database_file)
     return data_dict
 
-def inserir_registro(nome:str,valor:float,blockchain:str,status:bool,image_path:str):
+def inserir_registro(nome:str,valor:float,blockchain:str,status:Literal['Dispnível','Indisponível'],image_path:str):
     '''
     '''
     
@@ -159,7 +160,7 @@ def ler_banco_de_dados_arvore_b(**kwargs):
     for key, value in dados.items():
         # Convertendo 'valor' e 'status' para o tipo apropriado
         value['valor'] = float(value['valor'])
-        value['status'] = value['status'] == "true"
+        value['status'] = value['status']
         b_tree.insert((int(key), value))
 
     # Filtrar registros com base nos kwargs

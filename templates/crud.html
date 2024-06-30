@@ -118,7 +118,7 @@ function loadNFTs() {
                     <td>${nft.nome}</td>
                     <td>${Number(nft.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                     <td>${nft.blockchain}</td>
-                    <td>${nft.status ? 'Disponível' : 'Indisponível'}</td>
+                    <td>${nft.status}</td>
                     <td>
                         <button class="btn btn-danger" onclick="deleteNFT(${nft.id})">Deletar</button>
                     </td>

@@ -5,49 +5,49 @@
    "nome": "Normal Ape",
    "valor": 10000,
    "blockchain": "ik58963bd",
-   "status": true,
+   "status": "Disponível",
    "image": "./static/img/normalape.svg"
   },
   "4": {
    "nome": "Communist Ape",
    "valor": 5000.0,
    "blockchain": "cm1917urss1991",
-   "status": true,
+   "status": "Disponível",
    "image": "./static/img/communistape.jpg"
   },
   "6": {
    "nome": "Birthday Ape",
    "valor": 30000,
    "blockchain": "tuy534mb09zs",
-   "status": true,
+   "status": "Disponível",
    "image": "./static/img/bpdape.jpg"
   },
   "7": {
    "nome": "Child Ape",
    "valor": 30000,
    "blockchain": "aly948ss13o4n",
-   "status": true,
+   "status": "Disponível",
    "image": "./static/img/childape.png"
   },
   "9": {
    "nome": "Dev Boy",
    "valor": 6900,
    "blockchain": "4L34nDr0",
-   "status": true,
+   "status": "Disponível",
    "image": "./static/img/devboy.jpeg"
   },
   "10": {
    "nome": "Sexy Boy",
    "valor": 696969,
    "blockchain": "4l46g2B0yL0v3R",
-   "status": true,
+   "status": "Disponível",
    "image": "./static/img/sexyboy.jpeg"
   },
   "11": {
    "nome": "Homeless Boy",
    "valor": 100000000,
    "blockchain": "k893ma134Rg0l04w",
-   "status": true,
+   "status": "Disponível",
    "image": "./static/img/homlessboy.jpeg"
   }
  }

@@ -2,11 +2,13 @@ import io
 import json
 import zipfile
 from modules import database 
-from modules.utils import compress_lzw, decompress_lzw
 from flask import Flask, render_template, request, jsonify, send_file, redirect
 
 app = Flask(__name__)
-carrinho_de_compras_cliente = {}
+cliente = {
+    'carrinho':{},
+    'total_compra':0
+}
 
 @app.route('/')
 def home():
@@ -102,19 +104,22 @@ def alterar():
     
 @app.route("/carrinhoDeCompras",methods=['GET'])
 def carrinho_de_compras():
-    return render_template("carrinhoDeCompras.html",shopCart=carrinho_de_compras_cliente)
+    return render_template("carrinhoDeCompras.html",shopCart=cliente['carrinho'])
 
 @app.route("/inserir_no_carrinho",methods=['POST'])
 def inserir_no_carrinho():
     try:
         data = request.get_json()
         id = str(data['id'])
-        if carrinho_de_compras_cliente.get(id,None) is not None:
+        if cliente['carrinho'].get(id,None) is not None:
             raise Exception("Você ja tem este produto no seu carrinho! Produto não inserido!")
         
         nft = database.ler_banco_de_dados().get('dados').get(id)
-        carrinho_de_compras_cliente[id] = nft
+        cliente['carrinho'][id] = nft
+        cliente['total_compra'] = cliente['total_compra'] +  database.ler_banco_de_dados().get('dados').get(id).get('valor')
 
+        print(cliente['total_compra'])
+        
         return jsonify({"success": True, "message": f"Produto inserido no carrinho!"})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})
@@ -124,7 +129,7 @@ def remover_do_carrinho():
     try:
         data = request.get_json()
         id = str(data['id'])
-        del carrinho_de_compras_cliente[id]
+        del cliente['carrinho'][id]
 
         return jsonify({"success": True, "message": f"Produto removido do carrinho!"})
     except Exception as e:
