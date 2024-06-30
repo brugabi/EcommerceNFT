@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Carrinho de Compras{% endblock %}
+
+{% block content %}
+<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+    {% for produto_id, produto in shopCart.items() %}
+    <div class="col mb-5">
+        <div class="card h-100">
+            <!-- Product image-->
+            <img class="card-img-top img-fluid" src="{{ produto.image }}" alt="..." width="350" height="250"/>
+            <!-- Product details-->
+            <div class="card-body p-4">
+                <div class="text-center">
+                    <!-- Product name-->
+                    <h5 class="fw-bolder">{{ produto.nome }}</h5>
+                    <!-- Product price-->
+                    ${{ produto.valor }}<br>
+                    <!-- Product status-->
+                    {{ 'Disponível' if produto.status else 'Indisponível' }}<br>
+                    <!-- Product blockchain-->
+                    {{ produto.blockchain }}
+                </div>
+            </div>
+            <!-- Product actions-->
+            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                <div class="text-center"><a class="btn btn-outline-dark mt-auto" onclick="remove_from_shopcart({{produto_id}})" href="{{ url_for('carrinho_de_compras') }}">Remover</a></div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}            
+</div>
+<script>
+function remove_from_shopcart(id) {
+    fetch('/remover_do_carrinho', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id }) // Certifique-se de enviar um objeto JSON com a chave 'id'
+    }).then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert(data.message);
+          } else {
+              alert(data.message);
+          }
+      })
+      .catch(error => {
+          console.error('Erro ao inserir no carrinho:', error);
+          alert('Erro ao inserir no carrinho. Por favor, tente novamente.');
+      });
+}
+</script>
+{% endblock %}

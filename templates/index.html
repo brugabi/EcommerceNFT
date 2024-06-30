@@ -44,7 +44,7 @@
             <div class="col mb-5">
                 <div class="card h-100">
                     <!-- Product image-->
-                    <img class="card-img-top" src="{{ produto.image }}" alt="..." width="350" height="250"/>
+                    <img class="card-img-top img-fluid" src="{{ produto.image }}" alt="..." width="350" height="250"/>
                     <!-- Product details-->
                     <div class="card-body p-4">
                         <div class="text-center">
@@ -60,12 +60,34 @@
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" onclick="insertInShopCart({{produto_id}})">Adicionar</a></div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+            {% endfor %}            
         </div>
     </div>
 </section>
+<script>
+function insertInShopCart(id) {
+    fetch('/inserir_no_carrinho', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: id }) // Certifique-se de enviar um objeto JSON com a chave 'id'
+    }).then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert(data.message);
+          } else {
+              alert(data.message);
+          }
+      })
+      .catch(error => {
+          console.error('Erro ao inserir no carrinho:', error);
+          alert('Erro ao inserir no carrinho. Por favor, tente novamente.');
+      });
+}
+</script>
 {% endblock %}
