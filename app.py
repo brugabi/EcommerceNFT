@@ -66,15 +66,20 @@ def get_nfts():
 @app.route('/insert', methods=['POST'])
 def insert():
     try:
-        nome = request.form.get('nome')
-        valor = float(request.form.get("valor"))
-        # blockchain = request.form['blockchain']
-        # status = bool(request.form['status'])
-        # image_path = None
-        # database.inserir_registro(nome=nome, valor=valor, blockchain=blockchain, status=status, image_path=image_path)
+        data = request.get_json()  # Obter os dados JSON do corpo da requisição
+        if not data:
+            raise ValueError("Nenhum dado recebido")
+        
+        nome = data.get('nome')
+        valor = data.get('valor')
+        blockchain = data.get('blockchain')
+        status = data.get('status')
+        
+        # Apenas para debug, imprimir os dados recebidos
+        #print(f"Nome: {nome}, Valor: {valor}, Blockchain: {blockchain}, Status: {status}")
 
-        print(nome)
-        print(request.form.get('blockchain'),f' {type(request.form.get("blockchain"))}')
+        # Simular a inserção no banco de dados
+        database.inserir_registro(nome=nome, valor=valor, blockchain=blockchain, status=status, image_path=None)
 
         return jsonify({"success": True, "message": "NFT inserido com sucesso"})
     except Exception as e:
@@ -94,13 +99,31 @@ def delete():
 def alterar():
     try:
         data = request.get_json()
-        id = data['id']
-        key = data['key']
-        valor = data['valor']
-        database.alterar_registro(id=id, key=key, valor=valor)
-        return {"success": True, "message": f"O NFT {id} foi alterado com sucesso!"}
+        if not data:
+            return jsonify({"success": False, "message": "Nenhum dado fornecido."}), 400
+
+        id = data.get('id')
+        if not id:
+            return jsonify({"success": False, "message": "ID não fornecido."}), 400
+
+        nome = data.get('nome')
+        valor = data.get('valor')
+        blockchain = data.get('blockchain')
+        status = data.get('status')
+
+        # Atualizar cada campo se estiver presente
+        if nome is not None:
+            database.alterar_registro(id=id, key='nome', valor=nome)
+        if valor is not None:
+            database.alterar_registro(id=id, key='valor', valor=valor)
+        if blockchain is not None:
+            database.alterar_registro(id=id, key='blockchain', valor=blockchain)
+        if status is not None:
+            database.alterar_registro(id=id, key='status', valor=status)
+
+        return jsonify({"success": True, "message": f"O NFT {id} foi alterado com sucesso!"})
     except Exception as e:
-        return {"success": False, "message": str(e)}
+        return jsonify({"success": False, "message": str(e)}), 500
     
 @app.route("/carrinhoDeCompras",methods=['GET'])
 def carrinho_de_compras():
@@ -135,6 +158,14 @@ def remover_do_carrinho():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})
     
+@app.route("/get-ids",methods=['GET'])
+def get_ids():
+    return jsonify([id for id in database.ler_banco_de_dados().get('dados').keys()])
+
+@app.route("/get-data/<int:id>",methods=['GET'])
+def get_data(id):
+    data = database.ler_banco_de_dados().get('dados').get(str(id))
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True)
