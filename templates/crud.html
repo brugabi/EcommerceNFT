@@ -6,20 +6,6 @@
 <div class="container mt-5">
     <h1 class="mb-4">Gerenciar NFTs</h1>
 
-    <!-- Formulário de Inserção -->
-    <div id="insertFormContainer" style="display: none;">
-        <form id="insertForm" class="mb-4">
-            <!-- Campos do formulário de inserção -->
-        </form>
-    </div>
-
-    <!-- Formulário de Alteração -->
-    <div id="alterFormContainer" style="display: none;">
-        <form id="alterForm" class="mb-4">
-            <!-- Campos do formulário de alteração -->
-        </form>
-    </div>
-
     <!-- Botões para inserir e alterar registros -->
     <button type="button" class="btn btn-primary" onclick="showInsertForm()">Inserir Registro</button>
     <button type="button" class="btn btn-success ms-2" onclick="showAlterForm()">Alterar Registro</button>
@@ -47,10 +33,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Inserir Registro</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar" onclick="closeInsertForm()"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="insertForm" enctype="multipart/form-data">
+                    <form id="insertForm" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="insertNome" class="form-label">Nome</label>
                             <input type="text" class="form-control" id="insertNome" name="nome" required>
@@ -77,8 +63,8 @@
                     </form>                    
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" onclick="insertNFT()">Inserir</button>
+                    <button type="button" class="btn btn-primary" onclick="insertRegister()">Inserir</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeInsertForm()">Fechar</button>
                 </div>
             </div>
         </div>
@@ -86,88 +72,37 @@
 </div>
 
 <script>
-    function insertNFT() {
+    function insertRegister() {
         // Obtém o formulário
         var form = document.getElementById('insertForm');
         
         // Cria um objeto FormData para enviar os dados do formulário
         var formData = new FormData(form);
         
-        // Cria uma requisição AJAX para enviar os dados do formulário
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/insert'); // Substitua '/inserir_nft' pela rota correta no seu servidor
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                // O envio foi bem-sucedido, faça algo, se necessário
-                console.log('Inserção bem-sucedida!');
-            } else {
-                // Ocorreu um erro durante o envio, exiba uma mensagem de erro
-                console.error('Erro ao inserir:', xhr.statusText);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/insert', true);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    console.log('Sucesso:', xhr.responseText);
+                    alert('Sucesso! O NFT foi criado com sucesso!');
+                    // Fechar o modal após o envio bem-sucedido
+                    closeInsertForm();
+                    // Recarregar a tabela de NFTs
+                    loadNFTs();
+                } else {
+                    console.error('Erro:', xhr.status);
+                    alert('Erro ao criar um NFT!');
+                }
             }
         };
-        xhr.onerror = function() {
-            // Ocorreu um erro durante a requisição AJAX
-            console.error('Erro ao enviar a requisição.');
-        };
-        
-        // Envia os dados do formulário
+
         xhr.send(formData);
-    }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
     loadNFTs();
-
-    document.getElementById('insertForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        // Converter o valor do status para booleano
-        const status = formData.get('status') === 'Disponível';
-        formData.set('status', status);
-        fetch('/insert', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  alert(data.message);
-                  loadNFTs();
-              } else {
-                  alert(data.message);
-              }
-          });
-    });
-
-    // Função para exibir o formulário de inserção
-    function showInsertForm() {
-        document.getElementById('insertFormContainer').style.display = 'block';
-        document.getElementById('alterFormContainer').style.display = 'none';
-    }
-
-    document.getElementById('alterForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        // Converter o valor do status para booleano
-        const status = formData.get('status') === 'Disponível';
-        formData.set('status', status);
-        fetch('/alterar', {
-            method: 'POST',
-            body: formData
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  alert(data.message);
-                  loadNFTs();
-              } else {
-                  alert(data.message);
-              }
-          });
-    });
-
-    // Função para exibir o formulário de alteração
-    function showAlterForm() {
-        document.getElementById('alterFormContainer').style.display = 'block';
-        document.getElementById('insertFormContainer').style.display = 'none';
-    }
 });
 
 function loadNFTs() {
@@ -191,31 +126,6 @@ function loadNFTs() {
                 nftTableBody.appendChild(row);
             });
         });
-}
-
-function editNFT(id) {
-    const newValue = prompt('Digite o novo valor:');
-    if (newValue) {
-        const key = prompt('Digite o campo a ser alterado (nome, valor, blockchain, status):');
-        if (key) {
-            const data = { id, key, valor: key === 'status' ? (newValue === 'Disponível') : newValue };
-            fetch('/alterar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            }).then(response => response.json())
-            .then(data => {
-                  if (data.success) {
-                      alert(data.message);
-                      loadNFTs();
-                  } else {
-                      alert(data.message);
-                  }
-              });
-        }
-    }
 }
 
 function deleteNFT(id) {
@@ -242,6 +152,10 @@ function deleteNFT(id) {
 function showInsertForm() {
     var modal = document.getElementById('insertModal');
     modal.style.display = 'block';
+}
+function closeInsertForm() {
+    var modal = document.getElementById('insertModal');
+    modal.style.display = 'none';
 }
 
 // Fechar o modal quando o usuário clicar fora dele

@@ -63,16 +63,19 @@ def get_nfts():
 @app.route('/insert', methods=['POST'])
 def insert():
     try:
-        nome = request.form['nome']
-        valor = request.form['valor']
-        blockchain = request.form['blockchain']
-        status = bool(request.form['status'])
-        image_path = None
-        database.inserir_registro(nome=nome, valor=valor, blockchain=blockchain, status=status, image_path=image_path)
+        nome = request.form.get('nome')
+        valor = float(request.form.get("valor"))
+        # blockchain = request.form['blockchain']
+        # status = bool(request.form['status'])
+        # image_path = None
+        # database.inserir_registro(nome=nome, valor=valor, blockchain=blockchain, status=status, image_path=image_path)
 
-        return {"success": True, "message": "NFT inserido com sucesso"}
+        print(nome)
+        print(request.form.get('blockchain'),f' {type(request.form.get("blockchain"))}')
+
+        return jsonify({"success": True, "message": "NFT inserido com sucesso"})
     except Exception as e:
-        return {"success": False, "message": str(e)}
+        return jsonify({"success": False, "message": str(e)})
 
 @app.route('/delete', methods=['POST'])
 def delete():
