@@ -226,5 +226,17 @@ def get_valor_compra():
         'valor_carrinho':cliente['total_compra'],
         'valor_frete':cliente['distancia_frete']*2})
 
+@app.route('/finalizar_compra', methods=['POST'])
+def finalizar_compra():
+    # IDs dos produtos no carrinho
+    carrinho_ids = list(cliente['carrinho'].keys())
+
+    # Atualizar status dos produtos no carrinho
+    for produto_id in carrinho_ids:
+        database.alterar_registro(id=produto_id, key='status', valor="Indispon\u00edvel")
+        cliente['carrinho'].pop(produto_id)
+
+    return jsonify({"message": "Compra finalizada e Seus produtos estao a caminho", "carrinho": []}), 20
+
 if __name__ == '__main__':
     app.run(debug=True)

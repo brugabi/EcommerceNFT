@@ -61,7 +61,8 @@
                         <td id="valor_total"></td>
                     </tr>
                 </table>
-            </div>
+                <button class="btn btn-primary mt-2" onclick="finalizarCompra()">Finalizar a Compra</button>
+            </div> 
         </div>
         <!-- Coluna para o mapa -->
         <div class="col-md-8">
@@ -146,6 +147,21 @@ async function carregarBairros() {
             alert('Erro ao carregar mapa e valores da compra.');
         }
     }
+    async function finalizarCompra() {
+            const response = await fetch('/finalizar_compra', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            alert(result.message);
+            console.log(result.carrinho);
+
+            // Atualizar a página ou a exibição dos produtos
+            window.location.reload();
+        }
 
 window.onload = carregarBairros;
 </script>
