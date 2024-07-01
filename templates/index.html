@@ -60,7 +60,9 @@
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        {% if produto.status != 'Indispon\u00edvel' %}
                         <div class="text-center"><a class="btn btn-outline-dark mt-auto" onclick="insertInShopCart({{produto_id}})">Adicionar</a></div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -88,6 +90,7 @@ function insertInShopCart(id) {
           console.error('Erro ao inserir no carrinho:', error);
           alert('Erro ao inserir no carrinho. Por favor, tente novamente.');
       });
+      
 }
 </script>
 {% endblock %}

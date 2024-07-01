@@ -45,9 +45,9 @@
   },
   "11": {
    "nome": "Homeless Boy",
-   "valor": 100000000,
+   "valor": 100000000.0,
    "blockchain": "k893ma134Rg0l04w",
-   "status": "Indispon\u00edvel",
+   "status": "Dispon\u00edvel",
    "image": "./static/img/homlessboy.jpeg"
   }
  }

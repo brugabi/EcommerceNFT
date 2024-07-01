@@ -10,6 +10,8 @@
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.png') }}" />
         <!-- Bootstrap icons and core theme CSS (includes Bootstrap)-->
         <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet" />
+
+        <script src="https://kit.fontawesome.com/a16a49a67b.js" crossorigin="anonymous"></script>
     </head>
     <body>
         <!-- Navigation-->
@@ -36,20 +38,21 @@
                     <div id="btngap">
                         <a href="/download-database" target="_blank">
                             <button class="btn btn-outline-dark">
-                                <i class="bi-cart-fill me-1"></i>
+                                <i class="fa-solid fa-download"></i>
                                 Download
                             </button>
                         </a>
                         <a href="{{ url_for('adm') }}">
                             <button class="btn btn-outline-dark">
-                                <i class="bi-cart-fill me-1"></i>
+                                <i class="fa-solid fa-lock"></i>
                                 ADM
                             </button>
                         </a>
                         <a href="{{ url_for('carrinho_de_compras') }}">
                             <button class="btn btn-outline-dark">
-                                <i class="bi-cart-fill me-1"></i>
-                                Compras
+                                
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                Carrinho 
                             </button>
                         </a>
                     </div>
