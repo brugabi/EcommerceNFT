@@ -82,7 +82,7 @@ def insert():
         #print(f"Nome: {nome}, Valor: {valor}, Blockchain: {blockchain}, Status: {status}")
 
         # Simular a inserção no banco de dados
-        database.inserir_registro(nome=nome, valor=valor, blockchain=blockchain, status=status, image_path=None)
+        database.inserir_registro(nome=nome, valor=float(valor), blockchain=blockchain, status=status, image_path=None)
 
         return jsonify({"success": True, "message": "NFT inserido com sucesso"})
     except Exception as e:
@@ -118,7 +118,7 @@ def alterar():
         if nome is not None:
             database.alterar_registro(id=id, key='nome', valor=nome)
         if valor is not None:
-            database.alterar_registro(id=id, key='valor', valor=valor)
+            database.alterar_registro(id=id, key='valor', valor=float(valor))
         if blockchain is not None:
             database.alterar_registro(id=id, key='blockchain', valor=blockchain)
         if status is not None:
@@ -136,10 +136,10 @@ def carrinho_de_compras():
 def inserir_no_carrinho():
     try:
         data = request.get_json()
+        print(data)
         id = str(data['id'])
         if cliente['carrinho'].get(id,None) is not None:
             raise Exception("Você ja tem este produto no seu carrinho! Produto não inserido!")
-        
         nft = database.ler_banco_de_dados().get('dados').get(id)
         cliente['carrinho'][id] = nft
         cliente['total_compra'] = cliente['total_compra'] +  database.ler_banco_de_dados().get('dados').get(id).get('valor')
@@ -236,7 +236,7 @@ def finalizar_compra():
         database.alterar_registro(id=produto_id, key='status', valor="Indispon\u00edvel")
         cliente['carrinho'].pop(produto_id)
 
-    return jsonify({"message": "Compra finalizada e Seus produtos estao a caminho", "carrinho": []}), 20
+    return jsonify({"message": "Compra finalizada e Seus produtos estao a caminho", "carrinho": []})
 
 if __name__ == '__main__':
     app.run(debug=True)
