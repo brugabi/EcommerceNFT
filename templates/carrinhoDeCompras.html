@@ -28,8 +28,50 @@
             </div>
         </div>
     </div>
-    {% endfor %}            
+    {% endfor %}          
 </div>
+
+<!-- Adicionando a lista de bairros e o mapa -->
+<div class="container mt-5">
+    <div class="row">
+        <!-- Coluna para a lista de bairros e botão -->
+        <div class="col-md-4">
+            <h2>Escolha o bairro de destino</h2>
+            <label for="bairro">Bairros:</label>
+            <select id="bairro" class="form-select">
+                <option value="" disabled selected>Selecione um bairro</option>
+                <!-- Lista de bairros será carregada aqui -->
+            </select>
+            <button class="btn btn-primary mt-2" onclick="carregarMapa()">Carregar Mapa</button>
+
+            <!-- Tabela para mostrar os valores da compra -->
+            <div id="tabela-compra" class="mt-4" style="display: none;">
+                <h2>Valores da Compra</h2>
+                <table class="table">
+                    <tr>
+                        <td>Valor do Carrinho:</td>
+                        <td id="valor_carrinho"></td>
+                    </tr>
+                    <tr>
+                        <td>Valor do Frete:</td>
+                        <td id="valor_frete"></td>
+                    </tr>
+                    <tr>
+                        <td>Valor Total:</td>
+                        <td id="valor_total"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- Coluna para o mapa -->
+        <div class="col-md-8">
+            <div id="map-container" class="mt-4">
+                <!-- O iframe do mapa será inserido aqui -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 function remove_from_shopcart(id) {
     fetch('/remover_do_carrinho', {
@@ -51,5 +93,60 @@ function remove_from_shopcart(id) {
           alert('Erro ao inserir no carrinho. Por favor, tente novamente.');
       });
 }
+
+async function carregarBairros() {
+    const response = await fetch('/get-bairros');
+    const bairros = await response.json();
+    const select = document.getElementById('bairro');
+
+    bairros.forEach(bairro => {
+        const option = document.createElement('option');
+        option.value = bairro;
+        option.textContent = bairro;
+        select.appendChild(option);
+    });
+}
+
+    // Função assíncrona para carregar o mapa e os valores da compra
+    async function carregarMapa() {
+        try {
+            const bairroDestino = document.getElementById('bairro').value;
+
+            // Requisição para carregar o mapa via POST
+            const response = await fetch('/iframe-frete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ target: bairroDestino }),
+            });
+
+            // Verifica se a resposta é ok e carrega o mapa
+            if (response.ok) {
+                const data = await response.json();
+                document.getElementById('map-container').innerHTML = data.iframe;
+
+                // Mostra a tabela de valores da compra após carregar o mapa com sucesso
+                document.getElementById('tabela-compra').style.display = 'block';
+
+                // Requisição para obter os valores da compra
+                const valoresCompra = await fetch('/get-valor-compra');
+                const valoresData = await valoresCompra.json();
+
+                // Atualiza os valores na tabela de compra
+                document.getElementById('valor_carrinho').textContent = valoresData.valor_carrinho.toFixed(2);
+                document.getElementById('valor_frete').textContent = valoresData.valor_frete.toFixed(2);
+                document.getElementById('valor_total').textContent = (valoresData.valor_carrinho + valoresData.valor_frete).toFixed(2);
+            } else {
+                const errorData = await response.json();
+                alert(errorData.error);
+            }
+        } catch (error) {
+            console.error('Erro ao carregar mapa e valores da compra:', error);
+            alert('Erro ao carregar mapa e valores da compra.');
+        }
+    }
+
+window.onload = carregarBairros;
 </script>
 {% endblock %}

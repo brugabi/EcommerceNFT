@@ -1,13 +1,16 @@
 import io
 import json
+import folium
 import zipfile
-from modules import database 
+from modules import database
+from modules.graph import calcular_distancia
 from flask import Flask, render_template, request, jsonify, send_file, redirect
 
 app = Flask(__name__)
 cliente = {
     'carrinho':{},
-    'total_compra':0
+    'total_compra':0,
+    'distancia_frete':0
 }
 
 @app.route('/')
@@ -152,7 +155,8 @@ def remover_do_carrinho():
     try:
         data = request.get_json()
         id = str(data['id'])
-        del cliente['carrinho'][id]
+        produto_removido = cliente['carrinho'].pop(id)
+        cliente['total_compra'] = cliente['total_compra'] - produto_removido.get('valor')
 
         return jsonify({"success": True, "message": f"Produto removido do carrinho!"})
     except Exception as e:
@@ -166,6 +170,61 @@ def get_ids():
 def get_data(id):
     data = database.ler_banco_de_dados().get('dados').get(str(id))
     return jsonify(data)
+
+@app.route("/get-bairros",methods=['GET'])
+def get_bairros():
+    with open('bairros.json','r') as json_bairros:
+        locacoes = json.load(json_bairros)
+
+    return jsonify(list(locacoes.keys()))
+
+@app.route("/iframe-frete", methods=['POST'])
+def get_iframe():
+    try:
+        with open('bairros.json', 'r') as json_bairros:
+            localizacoes = json.load(json_bairros)
+
+        data = request.get_json()
+        destino = data.get('target')
+        origem = 'Rio Vermelho'
+
+        if destino not in localizacoes:
+            return jsonify({"error": "Destino não encontrado"}), 400
+
+        m = folium.Map(location=[-12.9714, -38.5014], zoom_start=12)
+        cliente['distancia_frete'],caminho = calcular_distancia(origem, destino)
+        for bairro in caminho:
+            folium.Marker(
+                location=localizacoes[bairro],
+                tooltip=bairro,
+                popup=bairro,
+                icon=folium.Icon(color="blue"),
+            ).add_to(m)
+
+        bairro_anterior = origem
+        for bairro in caminho:
+            folium.PolyLine(
+                locations=[localizacoes[bairro_anterior],localizacoes[bairro]],
+                weight=4,
+                color='blue'
+            ).add_to(m)
+            bairro_anterior=bairro
+
+        iframe = m.get_root()._repr_html_()
+        
+        response = jsonify({"iframe": iframe})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route("/get-valor-compra",methods=['GET'])
+def get_valor_compra():
+
+    return jsonify({
+        'valor_carrinho':cliente['total_compra'],
+        'valor_frete':cliente['distancia_frete']*2})
 
 if __name__ == '__main__':
     app.run(debug=True)
