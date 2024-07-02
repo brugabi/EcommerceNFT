@@ -36,7 +36,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar" onclick="closeInsertForm()"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="insertForm" method="post" enctype="multipart/form-data">
+                    <form form id="insertForm" method="post" enctype="multipart/form-data" onsubmit="event.preventDefault(); insertRegister();">
                         <div class="mb-3">
                             <label for="insertNome" class="form-label">Nome</label>
                             <input type="text" class="form-control" id="insertNome" name="nome" required>
@@ -60,12 +60,14 @@
                             <label for="insertImagem" class="form-label">Imagem</label>
                             <input type="file" class="form-control" id="insertImagem" name="imagem" accept="image/*" required>
                         </div>
-                    </form>                    
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Inserir</button>
+                            <button type="button" class="btn btn-secondary" onclick="closeInsertForm()">Fechar</button>
+                        </div>
+                    </form>
+                     
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="insertRegister()">Inserir</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeInsertForm()">Fechar</button>
-                </div>
+
             </div>
         </div>
     </div>
@@ -119,20 +121,11 @@
 <script>
 function insertRegister() {
     var form = document.getElementById('insertForm');
-    var formDataJson = {
-        nome: form.elements['nome'].value,
-        valor: form.elements['valor'].value,
-        blockchain: form.elements['blockchain'].value,
-        status: form.elements['status'].value,
-        // imagem: form.elements['imagem'].files[0]  // Vamos ignorar a imagem por enquanto
-    };
+    var formData = new FormData(form);
 
     fetch('/insert', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formDataJson)
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
@@ -147,9 +140,6 @@ function insertRegister() {
     .catch(error => alert('Erro ao criar um NFT: ' + error.message));
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    loadNFTs();
-});
 
 function loadNFTs() {
     fetch('/get-nfts')
@@ -174,122 +164,128 @@ function loadNFTs() {
         });
 }
 
-function deleteNFT(id) {
-    if (confirm('Tem certeza que deseja deletar este NFT?')) {
-        fetch('/delete', {
+    function deleteNFT(id) {
+        if (confirm('Tem certeza que deseja deletar este NFT?')) {
+            fetch('/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id })
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert(data.message);
+                      loadNFTs();
+                  } else {
+                      alert(data.message);
+                  }
+              });
+        }
+    }
+
+    // Função para exibir o modal de inserção
+    function showInsertForm() {
+        var modal = document.getElementById('insertModal');
+        modal.style.display = 'block';
+    }
+
+    function closeInsertForm() {
+        var modal = document.getElementById('insertModal');
+        modal.style.display = 'none';
+}
+
+    window.onclick = function(event) {
+        var modal = document.getElementById('insertModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Funções para o modal de alteração
+    function showAlterForm() {// Função para abrir o modal de alteração
+        var modal = document.getElementById('alterModal');
+        modal.style.display = 'block';
+        loadIds();  // Carregar os IDs ao abrir o modal
+    }
+
+    function closeAlterForm() {// Função para fechar o modal de alteração
+        var modal = document.getElementById('alterModal');
+        modal.style.display = 'none';
+    }
+
+    // Carregar os IDs no dropdown
+    function loadIds() {
+        fetch('/get-ids')
+            .then(response => response.json())
+            .then(data => {
+                var alterId = document.getElementById('alterId');
+                alterId.innerHTML = '';
+                data.forEach(id => {
+                    var option = document.createElement('option');
+                    option.value = id;
+                    option.text = id;
+                    alterId.appendChild(option);
+                });
+                if (data.length > 0) {
+                    updateFields(data[0]);  // Atualizar os campos com o primeiro ID
+                }
+            });
+    }
+
+    // Atualizar os campos com base no ID selecionado
+    function updateFields(id) {
+        fetch(`/get-data/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('alterNome').value = data.nome;
+                document.getElementById('alterValor').value = data.valor;
+                document.getElementById('alterBlockchain').value = data.blockchain;
+                document.getElementById('alterStatus').value = data.status;
+            });
+    }
+
+    // Função para enviar a alteração
+    function alterRegister() {
+        var form = document.getElementById('alterForm');
+        var formDataJson = {
+            id: form.elements['id'].value,
+            nome: form.elements['nome'].value,
+            valor: form.elements['valor'].value,
+            blockchain: form.elements['blockchain'].value,
+            status: form.elements['status'].value
+        };
+
+        fetch('/alterar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ id })
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  alert(data.message);
-                  loadNFTs();
-              } else {
-                  alert(data.message);
-              }
-          });
-    }
-}
-
-// Função para exibir o modal de inserção
-function showInsertForm() {
-    var modal = document.getElementById('insertModal');
-    modal.style.display = 'block';
-}
-function closeInsertForm() {
-    var modal = document.getElementById('insertModal');
-    modal.style.display = 'none';
-}
-window.onclick = function(event) {
-    var modal = document.getElementById('insertModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
-
-// Funções para o modal de alteração
-function showAlterForm() {// Função para abrir o modal de alteração
-    var modal = document.getElementById('alterModal');
-    modal.style.display = 'block';
-    loadIds();  // Carregar os IDs ao abrir o modal
-}
-
-function closeAlterForm() {// Função para fechar o modal de alteração
-    var modal = document.getElementById('alterModal');
-    modal.style.display = 'none';
-}
-
-// Carregar os IDs no dropdown
-function loadIds() {
-    fetch('/get-ids')
+            body: JSON.stringify(formDataJson)
+        })
         .then(response => response.json())
         .then(data => {
-            var alterId = document.getElementById('alterId');
-            alterId.innerHTML = '';
-            data.forEach(id => {
-                var option = document.createElement('option');
-                option.value = id;
-                option.text = id;
-                alterId.appendChild(option);
-            });
-            if (data.length > 0) {
-                updateFields(data[0]);  // Atualizar os campos com o primeiro ID
+            if (data.success) {
+                alert(data.message);
+                closeAlterForm();  // Fechar o modal após o envio bem-sucedido
+                loadNFTs();  // Recarregar a tabela de NFTs
+            } else {
+                alert(data.message);
             }
-        });
-}
-
-// Atualizar os campos com base no ID selecionado
-function updateFields(id) {
-    fetch(`/get-data/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById('alterNome').value = data.nome;
-            document.getElementById('alterValor').value = data.valor;
-            document.getElementById('alterBlockchain').value = data.blockchain;
-            document.getElementById('alterStatus').value = data.status;
-        });
-}
-
-// Função para enviar a alteração
-function alterRegister() {
-    var form = document.getElementById('alterForm');
-    var formDataJson = {
-        id: form.elements['id'].value,
-        nome: form.elements['nome'].value,
-        valor: form.elements['valor'].value,
-        blockchain: form.elements['blockchain'].value,
-        status: form.elements['status'].value
-    };
-
-    fetch('/alterar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formDataJson)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert(data.message);
-            closeAlterForm();  // Fechar o modal após o envio bem-sucedido
-            loadNFTs();  // Recarregar a tabela de NFTs
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => alert('Erro ao alterar o NFT: ' + error.message));
-}
-
-// Fechar o modal quando o usuário clicar fora dele
-window.onclick = function(event) {
-    var modal = document.getElementById('alterModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
+        })
+        .catch(error => alert('Erro ao alterar o NFT: ' + error.message));
     }
-}
+
+    // Fechar o modal quando o usuário clicar fora dele
+    window.onclick = function(event) {
+        var modal = document.getElementById('alterModal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadNFTs();
+    });
 </script>
 {% endblock %}

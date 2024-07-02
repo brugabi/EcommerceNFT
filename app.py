@@ -2,9 +2,11 @@ import io
 import json
 import folium
 import zipfile
+import os
 from modules import database
 from modules.graph import calcular_distancia
-from flask import Flask, render_template, request, jsonify, send_file, redirect
+from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 cliente = {
@@ -12,6 +14,13 @@ cliente = {
     'total_compra':0,
     'distancia_frete':0
 }
+
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def home():
@@ -60,31 +69,37 @@ def adm():
 @app.route('/get-nfts', methods=['GET'])
 def get_nfts():
     try:
+        # Ler os dados do banco de dados
         nfts = database.ler_banco_de_dados()['dados']
+        
+        # Criar a lista de NFTs
         nft_list = [{'id': key, **value} for key, value in nfts.items()]
+        
+        # Retornar a lista como JSON
         return jsonify(nft_list)
     except Exception as e:
+        # Em caso de erro, retornar uma mensagem de erro
         return jsonify({"success": False, "message": str(e)})
+
 
 @app.route('/insert', methods=['POST'])
 def insert():
     try:
-        data = request.get_json()  # Obter os dados JSON do corpo da requisição
-        if not data:
-            raise ValueError("Nenhum dado recebido")
+        nome = request.form['nome']
+        valor = float(request.form['valor'])
+        blockchain = request.form['blockchain']
+        status = request.form['status']
+        file = request.files['imagem']
         
-        nome = data.get('nome')
-        valor = data.get('valor')
-        blockchain = data.get('blockchain')
-        status = data.get('status')
+        # Salvar a imagem
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        image_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         
-        # Apenas para debug, imprimir os dados recebidos
-        #print(f"Nome: {nome}, Valor: {valor}, Blockchain: {blockchain}, Status: {status}")
-
-        # Simular a inserção no banco de dados
-        database.inserir_registro(nome=nome, valor=float(valor), blockchain=blockchain, status=status, image_path=None)
-
-        return jsonify({"success": True, "message": "NFT inserido com sucesso"})
+        database.inserir_registro(nome=nome, valor=valor, blockchain=blockchain, status=status, image_path=image_url)
+        
+        
+        return jsonify({"success": True, "message": "O NFT foi inserido com sucesso!", "image_url": image_url})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})
 
@@ -237,6 +252,21 @@ def finalizar_compra():
         cliente['carrinho'].pop(produto_id)
 
     return jsonify({"message": "Compra finalizada e Seus produtos estao a caminho", "carrinho": []})
+
+@app.route('/upload', methods=['POST', 'GET'])
+def upload_file():
+    print("caminho imagem")
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'})
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'})
+
+    # Salva a imagem no diretório especificado
+    file.save('static/img' + file.filename)
+    return jsonify({'success': 'Img enviada'})
 
 if __name__ == '__main__':
     app.run(debug=True)
