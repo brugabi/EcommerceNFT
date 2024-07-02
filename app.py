@@ -12,7 +12,8 @@ app = Flask(__name__)
 cliente = {
     'carrinho':{},
     'total_compra':0,
-    'distancia_frete':0
+    'distancia_frete':0,
+    'tempo':0
 }
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -239,7 +240,8 @@ def get_valor_compra():
 
     return jsonify({
         'valor_carrinho':cliente['total_compra'],
-        'valor_frete':cliente['distancia_frete']*2})
+        'valor_frete':cliente['distancia_frete']*2,
+        'tempo':cliente['distancia_frete']/2})
 
 @app.route('/finalizar_compra', methods=['POST'])
 def finalizar_compra():

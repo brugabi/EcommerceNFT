@@ -10,37 +10,37 @@
   },
   "4": {
    "nome": "Communist Ape",
-   "valor": 5000,
+   "valor": 5000.0,
    "blockchain": "cm1917urss1991",
    "status": "Dispon\u00edvel",
    "image": "./static/img/communistape.jpg"
   },
   "6": {
    "nome": "Birthday Ape",
-   "valor": 30000,
+   "valor": 30000.0,
    "blockchain": "tuy534mb09zs",
    "status": "Dispon\u00edvel",
    "image": "./static/img/bpdape.jpg"
   },
   "7": {
    "nome": "Child Ape",
-   "valor": 30000,
+   "valor": 30000.0,
    "blockchain": "aly948ss13o4n",
-   "status": "Indispon\u00edvel",
+   "status": "Dispon\u00edvel",
    "image": "./static/img/childape.png"
   },
   "9": {
    "nome": "Dev Boy",
-   "valor": 6900,
+   "valor": 6900.0,
    "blockchain": "4L34nDr0",
-   "status": "Indispon\u00edvel",
+   "status": "Dispon\u00edvel",
    "image": "./static/img/devboy.jpeg"
   },
   "10": {
    "nome": "Sexy Boy",
-   "valor": 696969,
+   "valor": 696969.0,
    "blockchain": "4l46g2B0yL0v3R",
-   "status": "Indispon\u00edvel",
+   "status": "Dispon\u00edvel",
    "image": "./static/img/sexyboy.jpeg"
   },
   "11": {

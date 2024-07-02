@@ -60,6 +60,10 @@
                         <td>Valor Total:</td>
                         <td id="valor_total"></td>
                     </tr>
+                    <tr>
+                        <td>Tempo de Entrega (Dias Uteis):</td>
+                        <td id="tempo"></td>
+                    </tr>
                 </table>
                 <button class="btn btn-primary mt-2" onclick="finalizarCompra()">Finalizar a Compra</button>
             </div> 
@@ -146,6 +150,7 @@ async function carregarBairros() {
                 document.getElementById('valor_carrinho').textContent = valoresData.valor_carrinho.toFixed(2);
                 document.getElementById('valor_frete').textContent = valoresData.valor_frete.toFixed(2);
                 document.getElementById('valor_total').textContent = (valoresData.valor_carrinho + valoresData.valor_frete).toFixed(2);
+                document.getElementById('tempo').textContent = valoresData.tempo.toFixed(0);
             } else {
                 const errorData = await response.json();
                 alert(errorData.error);
