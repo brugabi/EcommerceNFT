@@ -188,7 +188,7 @@ def get_data(id):
 
 @app.route("/get-bairros",methods=['GET'])
 def get_bairros():
-    with open('bairros.json','r') as json_bairros:
+    with open('bairros.json','r', encoding='utf-8', errors='ignore') as json_bairros:
         locacoes = json.load(json_bairros)
 
     return jsonify(list(locacoes.keys()))
@@ -196,7 +196,7 @@ def get_bairros():
 @app.route("/iframe-frete", methods=['POST'])
 def get_iframe():
     try:
-        with open('bairros.json', 'r') as json_bairros:
+        with open('bairros.json', 'r', encoding='utf-8', errors='ignore') as json_bairros:
             localizacoes = json.load(json_bairros)
 
         data = request.get_json()

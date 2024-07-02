@@ -1,5 +1,5 @@
 {
- "atualizacao": "01/07/2024, 21:07:35",
+ "atualizacao": "01/07/2024, 21:26:02",
  "dados": {
   "1": {
    "nome": "Normal Ape",
@@ -49,6 +49,41 @@
    "blockchain": "k893ma134Rg0l04w",
    "status": "Dispon\u00edvel",
    "image": "./static/img/homlessboy.jpeg"
+  },
+  "12": {
+   "nome": "Sleepy Gamer Boy",
+   "valor": 24567.0,
+   "blockchain": "at346m3425s",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\sleepy_gamer_boy.jpg"
+  },
+  "13": {
+   "nome": "Sleepy Finance Boy",
+   "valor": 543688.0,
+   "blockchain": "63dfgh45637",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\sleepy_adm_boi.jpg"
+  },
+  "14": {
+   "nome": "Sleepy Sly Boy",
+   "valor": 4546.0,
+   "blockchain": "dfasgf4356s",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\sleepy_sly_boy.jpg"
+  },
+  "15": {
+   "nome": "Timid Boy",
+   "valor": 2222.0,
+   "blockchain": "joaisfj345",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\timid_boy.jpeg"
+  },
+  "16": {
+   "nome": "RU Boy",
+   "valor": 2345.0,
+   "blockchain": "asdfat3",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\RUBOy.jpeg"
   }
  }
 }
