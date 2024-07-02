@@ -165,14 +165,14 @@ def inserir_no_carrinho():
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})
     
-@app.route("/remover_do_carrinho",methods=['POST'])
+@app.route("/remover_do_carrinho",methods=['POST', 'GET'])
 def remover_do_carrinho():
+    
     try:
         data = request.get_json()
         id = str(data['id'])
         produto_removido = cliente['carrinho'].pop(id)
         cliente['total_compra'] = cliente['total_compra'] - produto_removido.get('valor')
-
         return jsonify({"success": True, "message": f"Produto removido do carrinho!"})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)})

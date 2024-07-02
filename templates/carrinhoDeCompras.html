@@ -24,7 +24,7 @@
             </div>
             <!-- Product actions-->
             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                <div class="text-center"><a class="btn btn-outline-dark mt-auto" onclick="remove_from_shopcart({{produto_id}})" href="{{ url_for('carrinho_de_compras') }}">Remover</a></div>
+                <div class="text-center"><a class="btn btn-outline-dark mt-auto" onclick="remove_from_shopcart(event)" value="{{produto_id}}" href="{{ url_for('carrinho_de_compras') }}">Remover</a></div>
             </div>
         </div>
     </div>
@@ -74,8 +74,13 @@
 </div>
 
 <script>
-function remove_from_shopcart(id) {
-    fetch('/remover_do_carrinho', {
+function remove_from_shopcart(event) {
+
+    const id = event.target.getAttribute('value');
+    console.log(id);
+    
+    const alysson = ()=> {
+        fetch('/remover_do_carrinho', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -91,8 +96,11 @@ function remove_from_shopcart(id) {
       })
       .catch(error => {
           console.error('Erro ao inserir no carrinho:', error);
-          alert('Erro ao inserir no carrinho. Por favor, tente novamente.');
+          
       });
+    }
+    
+    alysson();
 }
 
 async function carregarBairros() {
