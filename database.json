@@ -1,5 +1,5 @@
 {
- "atualizacao": "01/07/2024, 21:26:02",
+ "atualizacao": "04/07/2024, 09:43:22",
  "dados": {
   "1": {
    "nome": "Normal Ape",
@@ -82,8 +82,57 @@
    "nome": "RU Boy",
    "valor": 2345.0,
    "blockchain": "asdfat3",
-   "status": "Dispon\u00edvel",
+   "status": "Indispon\u00edvel",
    "image": "static/uploads\\RUBOy.jpeg"
+  },
+  "17": {
+   "nome": "Sleepy Front End Boy",
+   "valor": 759375.0,
+   "blockchain": "asoifh3496n34",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\sleepy_frontend_boy.jpg"
+  },
+  "18": {
+   "nome": "Poor Boys",
+   "valor": 9464.0,
+   "blockchain": "2kn59mf",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\poor_boys.jpg"
+  },
+  "19": {
+   "nome": "Autistic Boy",
+   "valor": 58858969.0,
+   "blockchain": "2kn59mf",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\autistic_boy.jpg"
+  },
+  "20": {
+   "nome": "JAPEX Boys",
+   "valor": 749586.0,
+   "blockchain": "msldnf3957",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\japex_boys.jpg"
+  },
+  "21": {
+   "nome": "Rude Boy",
+   "valor": 84953.0,
+   "blockchain": "mkfslnf9314",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\rude_boy.jpg"
+  },
+  "22": {
+   "nome": "Bus Boy",
+   "valor": 84953.0,
+   "blockchain": "mofo30382",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\bus_boy.jpg"
+  },
+  "23": {
+   "nome": "??? Boy",
+   "valor": 999000.0,
+   "blockchain": "an0ni2345",
+   "status": "Dispon\u00edvel",
+   "image": "static/uploads\\anonimous_boy.jpg"
   }
  }
 }
