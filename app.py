@@ -3,12 +3,15 @@ import json
 import folium
 import zipfile
 import os
+from functools import wraps
+from secrets import compare_digest
+from uuid import uuid4
 from modules import database
 from modules.graph import calcular_distancia
 from flask import Flask, render_template, request, jsonify, send_file, redirect, url_for
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.config['ADMIN_TOKEN'] = os.getenv('ADMIN_TOKEN')
 cliente = {
     'carrinho':{},
     'total_compra':0,
@@ -16,12 +19,42 @@ cliente = {
     'tempo':0
 }
 
-UPLOAD_FOLDER = 'static/uploads'
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def save_uploaded_image(file):
+    if file is None or file.filename == '':
+        raise ValueError("Nenhuma imagem enviada.")
+    if not allowed_file(file.filename):
+        raise ValueError("Tipo de arquivo nao permitido.")
+
+    extension = file.filename.rsplit('.', 1)[1].lower()
+    safe_filename = f"{uuid4().hex}.{extension}"
+    destination = os.path.join(app.config['UPLOAD_FOLDER'], safe_filename)
+    file.save(destination)
+
+    return f"static/uploads/{safe_filename}"
+
+def admin_required(view):
+    @wraps(view)
+    def wrapped_view(*args, **kwargs):
+        expected_token = app.config.get('ADMIN_TOKEN')
+        if not expected_token:
+            return view(*args, **kwargs)
+
+        supplied_token = request.headers.get('X-Admin-Token') or request.args.get('admin_token', '')
+        if compare_digest(supplied_token, expected_token):
+            return view(*args, **kwargs)
+
+        return jsonify({"success": False, "message": "Nao autorizado."}), 401
+
+    return wrapped_view
 
 @app.route('/')
 def home():
@@ -64,8 +97,9 @@ def download():
     )
 
 @app.route('/adm')
+@admin_required
 def adm():
-    return render_template('crud.html')
+    return render_template('crud.html', admin_token=request.args.get('admin_token', ''))
 
 @app.route('/get-nfts', methods=['GET'])
 def get_nfts():
@@ -84,27 +118,29 @@ def get_nfts():
 
 
 @app.route('/insert', methods=['POST'])
+@admin_required
 def insert():
     try:
         nome = request.form['nome']
         valor = float(request.form['valor'])
         blockchain = request.form['blockchain']
         status = request.form['status']
-        file = request.files['imagem']
+        file = request.files.get('imagem')
         
         # Salvar a imagem
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        image_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        image_url = save_uploaded_image(file)
         
         database.inserir_registro(nome=nome, valor=valor, blockchain=blockchain, status=status, image_path=image_url)
         
         
         return jsonify({"success": True, "message": "O NFT foi inserido com sucesso!", "image_url": image_url})
-    except Exception as e:
-        return jsonify({"success": False, "message": str(e)})
+    except ValueError as e:
+        return jsonify({"success": False, "message": str(e)}), 400
+    except Exception:
+        return jsonify({"success": False, "message": "Erro ao inserir NFT."}), 500
 
 @app.route('/delete', methods=['POST'])
+@admin_required
 def delete():
     try:
         data = request.get_json()
@@ -115,6 +151,7 @@ def delete():
         return {"success": False, "message": str(e)}
 
 @app.route('/alterar', methods=['POST'])
+@admin_required
 def alterar():
     try:
         data = request.get_json()
@@ -179,10 +216,12 @@ def remover_do_carrinho():
         return jsonify({"success": False, "message": str(e)})
     
 @app.route("/get-ids",methods=['GET'])
+@admin_required
 def get_ids():
     return jsonify([id for id in database.ler_banco_de_dados().get('dados').keys()])
 
 @app.route("/get-data/<int:id>",methods=['GET'])
+@admin_required
 def get_data(id):
     data = database.ler_banco_de_dados().get('dados').get(str(id))
     return jsonify(data)
@@ -256,19 +295,22 @@ def finalizar_compra():
     return jsonify({"message": "Compra finalizada e Seus produtos estao a caminho", "carrinho": []})
 
 @app.route('/upload', methods=['POST', 'GET'])
+@admin_required
 def upload_file():
-    print("caminho imagem")
     if 'file' not in request.files:
-        return jsonify({'error': 'No file part'})
+        return jsonify({'error': 'Nenhum arquivo enviado.'}), 400
 
     file = request.files['file']
 
     if file.filename == '':
-        return jsonify({'error': 'No selected file'})
+        return jsonify({'error': 'Nenhum arquivo selecionado.'}), 400
 
     # Salva a imagem no diretório especificado
-    file.save('static/img' + file.filename)
-    return jsonify({'success': 'Img enviada'})
+    try:
+        image_url = save_uploaded_image(file)
+        return jsonify({'success': 'Img enviada', 'image_url': image_url})
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.getenv('FLASK_DEBUG') == '1')

@@ -24,10 +24,26 @@ Aplicação web simples que simula a compra de NFTs. Antes da finalização do p
    ```bash
    pip install -r requirements.txt
    ```
-4. Execute a aplicação:
+4. Opcionalmente, instale as ferramentas de verificação:
+   ```bash
+   pip install -r requirements-dev.txt
+   ```
+5. Execute a aplicação:
    ```bash
    python app.py
    ```
+
+## Segurança
+- Para proteger a tela administrativa, defina `ADMIN_TOKEN` antes de iniciar o Flask e acesse `/adm?admin_token=SEU_TOKEN`.
+- O modo debug fica desligado por padrão. Use `FLASK_DEBUG=1` apenas em desenvolvimento local.
+- O Dependabot verifica dependências Python semanalmente e abre pull requests para atualizações de segurança.
+- O workflow `Security` roda `pip check`, compilação dos arquivos Python e `pip-audit -r requirements.txt`.
+- Antes de enviar alterações, rode:
+  ```bash
+  python -m pip check
+  python -m compileall app.py modules teste.py
+  pip-audit -r requirements.txt
+  ```
 
 ## Observações
 - A aplicação é local e não faz chamadas externas.

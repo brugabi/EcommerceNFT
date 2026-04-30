@@ -79,6 +79,7 @@
 
 <script>
 function remove_from_shopcart(event) {
+    event.preventDefault();
 
     const id = event.target.getAttribute('value');
     console.log(id);
@@ -94,6 +95,7 @@ function remove_from_shopcart(event) {
       .then(data => {
           if (data.success) {
               alert(data.message);
+              window.location.reload();
           } else {
               alert(data.message);
           }

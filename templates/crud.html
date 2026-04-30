@@ -119,12 +119,22 @@
 </div>
 
 <script>
+const ADMIN_TOKEN = {{ admin_token|default('', true)|tojson }};
+
+function adminHeaders(headers = {}) {
+    if (ADMIN_TOKEN) {
+        headers['X-Admin-Token'] = ADMIN_TOKEN;
+    }
+    return headers;
+}
+
 function insertRegister() {
     var form = document.getElementById('insertForm');
     var formData = new FormData(form);
 
     fetch('/insert', {
         method: 'POST',
+        headers: adminHeaders(),
         body: formData
     })
     .then(response => response.json())
@@ -168,9 +178,9 @@ function loadNFTs() {
         if (confirm('Tem certeza que deseja deletar este NFT?')) {
             fetch('/delete', {
                 method: 'POST',
-                headers: {
+                headers: adminHeaders({
                     'Content-Type': 'application/json'
-                },
+                }),
                 body: JSON.stringify({ id })
             }).then(response => response.json())
               .then(data => {
@@ -216,7 +226,7 @@ function loadNFTs() {
 
     // Carregar os IDs no dropdown
     function loadIds() {
-        fetch('/get-ids')
+        fetch('/get-ids', { headers: adminHeaders() })
             .then(response => response.json())
             .then(data => {
                 var alterId = document.getElementById('alterId');
@@ -235,7 +245,7 @@ function loadNFTs() {
 
     // Atualizar os campos com base no ID selecionado
     function updateFields(id) {
-        fetch(`/get-data/${id}`)
+        fetch(`/get-data/${id}`, { headers: adminHeaders() })
             .then(response => response.json())
             .then(data => {
                 document.getElementById('alterNome').value = data.nome;
@@ -258,9 +268,9 @@ function loadNFTs() {
 
         fetch('/alterar', {
             method: 'POST',
-            headers: {
+            headers: adminHeaders({
                 'Content-Type': 'application/json'
-            },
+            }),
             body: JSON.stringify(formDataJson)
         })
         .then(response => response.json())

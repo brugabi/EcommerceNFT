@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template_string
 
 import folium
@@ -74,4 +76,4 @@ def components():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=os.getenv("FLASK_DEBUG") == "1")
